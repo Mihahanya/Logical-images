@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Build an image according to a logical rule</title>
+	<meta charset="utf-8">
+	
+	<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+	<script src="build.js" type="text/javascript"></script>
+</head>
+
+<body>
+	<textarea id="expression" type="text" placeholder="insert your logical expression here"></textarea>
+
+  	<main>
+		<svg id="display" viewBox="0 0 21 21" width="100%" height="100%"> </svg>
+	</main>
+
+	<footer> <a href="https:/github.com/Mihahanya"> 2022 Mihahanya </a> </footer>
+</body>
+
+<script>
+	function display(bin_img) {
+		function pixel(pos_x, pos_y) { 
+			return `<rect x="${pos_x}" y="${pos_y}" fill="#000" width="1" height="1" id="template"></rect>` 
+		}
+
+		$('#display').attr("viewBox", `0 0 ${bin_img[0].length} ${bin_img.length}`)
+
+		res = ''
+		for (let i=0; i<bin_img.length; i++) {
+			for (let j=0; j<bin_img[0].length; j++) {
+				if (bin_img[i][j]) res += pixel(j, i)
+			}	
+		}
+
+		$("#display").html(res);
+	}
+
+	display([[0, 1], [1, 0]])
+
+	//console.log(calculate_logical_expression('A + B * (B -> B) + A * (B * A ^ (~A^B+B) <- B)', {'A':1, 'B':0}))
+	console.log(calculate_logical_expression('X*Y*Z', {'X':1, 'Y':1, 'Z':1}))
+
+</script>
+
+<style>
+	body {
+		background-color: aliceblue;
+	}
+
+	textarea {
+		position: absolute;
+		top: 20px;
+		left: 50%;
+		transform: translate(-50%, 0);
+		height: 20px;
+		width: 50vmin;
+		max-width: 50vmin;
+		min-width: 50vmin;
+		font-size: .95rem;
+		padding: 7px;
+		text-align: left;
+		border: 1px solid;
+}
+
+	main {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
+
+	footer {
+		position: absolute;
+		bottom: 10px;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
+</style>
+
+</html>

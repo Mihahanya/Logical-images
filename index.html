@@ -36,7 +36,16 @@
 
 	display([[0, 1], [1, 0]])
 
-	console.log(calculate_logical_expression('a + b * (b -> b) + a * (b * a ^ (~a^b+b) -> b)', {'a':1, 'b':0}))
+	$('#expression').on('keydown keyup change', function() {
+		var vars = Array.from(new Set($(this).val().replace(/[^A-z]/i, ''))).join('')
+
+		var w = vars.slice(0, Math.round(vars.length/2))
+		var h = vars.slice(w.length)
+
+		console.log(w, h)
+	})
+
+	//console.log(calculate_logical_expression('a + b * (b -> b) + a * (b * a ^ (~a^b+b) -> b)', {'a':0, 'b':0}))
 	//console.log(calculate_logical_expression('a+(~b^c)->c', {'a':1, 'b':0, 'c':1}))
 
 </script>

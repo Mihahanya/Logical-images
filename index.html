@@ -9,7 +9,7 @@
 </head>
 
 <body>
-	<textarea id="expression" type="text" placeholder="insert your logical expression here"></textarea>
+	<textarea id="expression" type="text" spellcheck="false" placeholder="insert your logical expression here"></textarea>
 
   	<main>
 		<svg id="display" viewBox="0 0 21 21" width="100%" height="100%"> </svg>
@@ -20,15 +20,13 @@
 
 <script>
 	function display(bin_img) {
-		function pixel(pos_x, pos_y) { 
-			return `<rect x="${pos_x}" y="${pos_y}" fill="#000" width="1" height="1" id="template"></rect>` 
-		}
+		var pixel = (pos_x, pos_y) => `<rect x="${pos_x}" y="${pos_y}" fill="#000" width="1" height="1" id="template"></rect>` 
 
 		$('#display').attr("viewBox", `0 0 ${bin_img[0].length} ${bin_img.length}`)
 
 		res = ''
-		for (let i=0; i<bin_img.length; i++) {
-			for (let j=0; j<bin_img[0].length; j++) {
+		for (var i=0; i<bin_img.length; i++) {
+			for (var j=0; j<bin_img[0].length; j++) {
 				if (bin_img[i][j]) res += pixel(j, i)
 			}	
 		}
@@ -38,19 +36,19 @@
 
 	display([[0, 1], [1, 0]])
 
-	//console.log(calculate_logical_expression('A + B * (B -> B) + A * (B * A ^ (~A^B+B) <- B)', {'A':1, 'B':0}))
-	console.log(calculate_logical_expression('X*Y*Z', {'X':1, 'Y':1, 'Z':1}))
+	console.log(calculate_logical_expression('a + b * (b -> b) + a * (b * a ^ (~a^b+b) -> b)', {'a':1, 'b':0}))
+	//console.log(calculate_logical_expression('a+(~b^c)->c', {'a':1, 'b':0, 'c':1}))
 
 </script>
 
 <style>
 	body {
-		background-color: aliceblue;
+		background-color: whitesmoke;
 	}
 
 	textarea {
 		position: absolute;
-		top: 20px;
+		top: 25px;
 		left: 50%;
 		transform: translate(-50%, 0);
 		height: 20px;
@@ -58,10 +56,16 @@
 		max-width: 50vmin;
 		min-width: 50vmin;
 		font-size: .95rem;
-		padding: 7px;
+		padding: 10px 12px;
 		text-align: left;
 		border: 1px solid;
-}
+		background-color: #00000000;
+		box-shadow: 5px 5px 15px 0px #0000001f;
+	}
+	textarea:focus-visible {
+		outline: 0;
+		border: 1px solid #3f51b5;
+	}
 
 	main {
 		position: absolute;

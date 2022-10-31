@@ -3,12 +3,14 @@ function calculate_logical_expression(expression, vars) {
 	/*
 	The variable is a single latin varter, takes the value 0 or 1
 	The binary functions:
-	~ negation
-	* conjunction
-	+ disjunction
-	^ exclusive disjunction
-	-> implication
-	= biconditional
+	~, ¬ negation
+	*, ∧, & conjunction
+	|, ↑ alternative denial
+	+, ∨ disjunction
+	/, ↓ joint denial
+	^, ⨁ exclusive disjunction
+	->, → implication, <-, ← converse implication
+	=, ≡ biconditional
 	*/
 	
 	// remove spaces and replace variables with their values
@@ -42,12 +44,15 @@ function calculate_logical_expression(expression, vars) {
 
 	// linear transformations
 	const operations = [
-		{ reg: /~[01]/, 		func: (_, a) => (a^1) }, 
-		{ reg: /[01]\*[01]/, 	func: (a, b) => (+a * +b) }, 
-		{ reg: /[01]\+[01]/, 	func: (a, b) => (Math.min(+a + +b, 1)) }, 
-		{ reg: /[01]\^[01]/, 	func: (a, b) => (a ^ b) }, 
-		{ reg: /[01]->[01]/, 	func: (a, b) => (+(a <= b)) }, 
-		{ reg: /[01]=[01]/, 	func: (a, b) => (+(a == b)) }, 
+		{ reg: /[~¬][01]/, 			func: (_, a) => (a^1) }, 
+		{ reg: /[01][\*∧&][01]/, 	func: (a, b) => (+a * +b) }, 
+		{ reg: /[01][\|↑][01]/, 	func: (a, b) => (+a * +b)^1 }, 
+		{ reg: /[01][\+∨][01]/, 	func: (a, b) => (Math.min(+a + +b, 1)) }, 
+		{ reg: /[01][/↓][01]/,		func: (a, b) => (Math.min(+a + +b, 1))^1 }, 
+		{ reg: /[01][\^⨁][01]/,		func: (a, b) => (a ^ b) }, 
+		{ reg: /[01](->|→)[01]/, 	func: (a, b) => (+(a <= b)) }, 
+		{ reg: /[01](<-|←)[01]/, 	func: (a, b) => (+(a >= b)) }, 
+		{ reg: /[01][=≡][01]/, 		func: (a, b) => (+(a == b)) }, 
 	]
 
 	for (var op in operations) {

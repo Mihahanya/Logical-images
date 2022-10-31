@@ -9,6 +9,22 @@
 </head>
 
 <body>
+	<p style="margin: 18px 10px; font-family: monospace;">
+		The variable is a single latin varter, <br>
+		takes the value 0 or 1. <br><br>
+
+		The binary functions: <br>
+		~, ¬ negation <br>
+		*, ∧, & conjunction <br>
+		|, ↑ alternative denial <br>
+		+, ∨ disjunction <br>
+		/, ↓ joint denial <br>
+		^, ⨁ exclusive disjunction <br>
+		->, → implication <br>
+		<-, ← converse implication <br>
+		=, ≡ biconditional <br>
+		</p>
+
 	<textarea id="expression" type="text" spellcheck="false" placeholder="insert your logical expression here">a^b</textarea>
 
   	<main>
@@ -27,7 +43,8 @@
 		var res = ''
 		for (var i=0; i<bin_img.length; i++) {
 			for (var j=0; j<bin_img[0].length; j++) {
-				if (bin_img[i][j] == 0) res += pixel(j, i, '#000')
+				if (bin_img[i][j] == 0) res += pixel(j, i, '#222')
+				else res += pixel(j, i, '#fff')
 			}	
 		}
 
@@ -35,6 +52,9 @@
 	}
 
 	function get_vars_vals_by_ind(num, vars_names) {
+		// (4, 'abcd') => [{name: 'a', val: 0}, {name: 'b', val: 1}, {name: 'c', val: 0}, {name: 'd', val: 0}]
+		// bin(4) = 0b0100
+
 		if (vars_names == '') return []
 
 		num = num.toString(2)
@@ -73,10 +93,13 @@
 
 		if (res[0] != null) {
 			display(res)
+
+			// Normal borders
 			$("#expression").attr('style', '')
 			$("#display").attr('style', 'border: 1px solid')
 		}
 		else {
+			// Red borders
 			$("#expression").attr('style', 'border: 1px solid #e91e63')
 			$("#display").attr('style', 'border: 1px solid #e91e63;')
 		}
@@ -107,6 +130,7 @@
 		border: 1px solid;
 		background-color: #00000000;
 		box-shadow: 5px 5px 15px 0px #0000001f;
+		font-family: monospace;
 	}
 	textarea:focus-visible {
 		outline: 0;

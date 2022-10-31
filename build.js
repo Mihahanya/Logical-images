@@ -5,10 +5,10 @@ function calculate_logical_expression(expression, vars) {
 	The binary functions:
 	~, ¬ negation
 	*, ∧, & conjunction
-	|, ↑ alternative denial
 	+, ∨ disjunction
-	/, ↓ joint denial
 	^, ⨁ exclusive disjunction
+	|, ↑ alternative denial
+	/, ↓ joint denial
 	->, → implication, <-, ← converse implication
 	=, ≡ biconditional
 	*/
@@ -46,10 +46,10 @@ function calculate_logical_expression(expression, vars) {
 	const operations = [
 		{ reg: /[~¬][01]/, 			func: (_, a) => (a^1) }, 
 		{ reg: /[01][\*∧&][01]/, 	func: (a, b) => (+a * +b) }, 
-		{ reg: /[01][\|↑][01]/, 	func: (a, b) => (+a * +b)^1 }, 
 		{ reg: /[01][\+∨][01]/, 	func: (a, b) => (Math.min(+a + +b, 1)) }, 
-		{ reg: /[01][/↓][01]/,		func: (a, b) => (Math.min(+a + +b, 1))^1 }, 
 		{ reg: /[01][\^⨁][01]/,		func: (a, b) => (a ^ b) }, 
+		{ reg: /[01][\|↑][01]/, 	func: (a, b) => (+a * +b)^1 }, 
+		{ reg: /[01][/↓][01]/,		func: (a, b) => (Math.min(+a + +b, 1))^1 }, 
 		{ reg: /[01](->|→)[01]/, 	func: (a, b) => (+(a <= b)) }, 
 		{ reg: /[01](<-|←)[01]/, 	func: (a, b) => (+(a >= b)) }, 
 		{ reg: /[01][=≡][01]/, 		func: (a, b) => (+(a == b)) }, 

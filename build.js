@@ -1,5 +1,5 @@
 
-function calculate_logical_expression(expr, vars) {
+function calculate_logical_expression(expression, vars) {
 	/*
 	The variable is a single latin varter, takes the value 0 or 1
 	The binary functions:
@@ -12,8 +12,8 @@ function calculate_logical_expression(expr, vars) {
 	*/
 	
 	// remove spaces and replace variables with their values
-	expr = expr.split(' ').join('')
-	for (const var_name in vars) expr = expr.replaceAll(var_name, vars[var_name])
+	var expr = expression.split(' ').join('')
+	for (const i in vars) expr = expr.replaceAll(vars[i].name, vars[i].val) 
 	
 	// open the brackets by recursion
 	

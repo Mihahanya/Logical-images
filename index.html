@@ -9,10 +9,10 @@
 </head>
 
 <body>
-	<textarea id="expression" type="text" spellcheck="false" placeholder="insert your logical expression here"></textarea>
+	<textarea id="expression" type="text" spellcheck="false" placeholder="insert your logical expression here">a^b</textarea>
 
   	<main>
-		<svg id="display" viewBox="0 0 21 21" width="100%" height="100%"> </svg>
+		<svg id="display" viewBox="0 0 21 21" width="100%" height="100%" style="border: 1px solid"> </svg>
 	</main>
 
 	<footer> <a href="https:/github.com/Mihahanya"> 2022 Mihahanya </a> </footer>
@@ -20,33 +20,70 @@
 
 <script>
 	function display(bin_img) {
-		var pixel = (pos_x, pos_y) => `<rect x="${pos_x}" y="${pos_y}" fill="#000" width="1" height="1" id="template"></rect>` 
+		var pixel = (pos_x, pos_y, color) => `<rect x="${pos_x}" y="${pos_y}" fill="${color}" width="1" height="1" id="template"></rect>` 
 
 		$('#display').attr("viewBox", `0 0 ${bin_img[0].length} ${bin_img.length}`)
 
-		res = ''
+		var res = ''
 		for (var i=0; i<bin_img.length; i++) {
 			for (var j=0; j<bin_img[0].length; j++) {
-				if (bin_img[i][j]) res += pixel(j, i)
+				if (bin_img[i][j] == 0) res += pixel(j, i, '#000')
 			}	
 		}
 
 		$("#display").html(res);
 	}
 
+	function get_vars_vals_by_ind(num, vars_names) {
+		if (vars_names == '') return []
+
+		num = num.toString(2)
+		num = '0'.repeat(vars_names.length-num.length) + num
+
+		var vars = []
+		for (const i in vars_names)
+			vars.push({name: vars_names[i], val: num[i]})
+		
+		return vars
+	}
+
 	display([[0, 1], [1, 0]])
 
 	$('#expression').on('keydown keyup change', function() {
-		var vars = Array.from(new Set($(this).val().replace(/[^A-z]/i, ''))).join('')
+		var vars_names = Array.from(new Set($(this).val().replaceAll(/\W|[0-1]/g, ''))).join('')
+		
+		var w_names = vars_names.slice(0, Math.round(vars_names.length/2))
+		var h_names = vars_names.slice(w_names.length)
 
-		var w = vars.slice(0, Math.round(vars.length/2))
-		var h = vars.slice(w.length)
+		var res = []
+		for (var i=0; i<2**h_names.length; i++) {
+			var h_vars = get_vars_vals_by_ind(i, h_names)
+						
+			var l = []
+			for (var j=0; j<2**w_names.length; j++) {
+				var vars = h_vars.concat(get_vars_vals_by_ind(j, w_names))
 
-		console.log(w, h)
+				var pix = calculate_logical_expression($('#expression').val(), vars)
+				l.push(pix)
+
+				if (pix == null) { res[0] = null; break }
+			}
+			res.push(l)
+		}
+
+		if (res[0] != null) {
+			display(res)
+			$("#expression").attr('style', '')
+			$("#display").attr('style', 'border: 1px solid')
+		}
+		else {
+			$("#expression").attr('style', 'border: 1px solid #e91e63')
+			$("#display").attr('style', 'border: 1px solid #e91e63;')
+		}
 	})
 
-	//console.log(calculate_logical_expression('a + b * (b -> b) + a * (b * a ^ (~a^b+b) -> b)', {'a':0, 'b':0}))
-	//console.log(calculate_logical_expression('a+(~b^c)->c', {'a':1, 'b':0, 'c':1}))
+	//console.log(calculate_logical_expression('a + b * (b -> b) + a * (b * a ^ (~a^b+b) -> b)', [{name:'a', val:0}, {name:'b', val:1}]))
+	//console.log(calculate_logical_expression('a+(~b^c)->c', [{name:'a', val: 1}, {name:'b', val:0}, {name:'c', val:1}]))
 
 </script>
 

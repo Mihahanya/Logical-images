@@ -10,8 +10,7 @@
 
 <body>
 	<p style="margin: 18px 10px; font-family: monospace;">
-		The variable is a single latin varter, <br>
-		takes the value 0 or 1. <br><br>
+		The variable is a single latin letter <br><br>
 
 		The binary functions: <br>
 		~, ¬ negation <br>
@@ -23,25 +22,26 @@
 		->, → implication <br>
 		<-, ← converse implication <br>
 		=, ≡ biconditional <br>
-		</p>
+	</p>
 
 	<textarea id="expression" type="text" spellcheck="false" placeholder="insert your logical expression here">a^b</textarea>
 
-	<main>
+	<div class="main">
 		<p id="w_names" class="vars_names">a</p>
-		<p id="h_names" class="vars_names" style="margin: 12px -36px; transform: rotate(90deg);">b</p>
+		<p id="h_names" class="vars_names">b</p>
 
 		<svg id="display" viewBox="0 0 21 21" width="100%" height="100%" style="border: 1px solid"> </svg>
-	</main>
+	</div>
+	
 
 	<footer> <a href="https:/github.com/Mihahanya"> 2022 Mihahanya </a> </footer>
 </body>
 
 <script>
-	function display(bin_img) {
+	function display(bin_img, element) {
 		var pixel = (pos_x, pos_y, color) => `<rect x="${pos_x}" y="${pos_y}" fill="${color}" width="1" height="1" id="template"></rect>` 
 
-		$('#display').attr("viewBox", `0 0 ${bin_img[0].length} ${bin_img.length}`)
+		$(element).attr("viewBox", `0 0 ${bin_img[0].length} ${bin_img.length}`)
 
 		var res = ''
 		for (var i=0; i<bin_img.length; i++) {
@@ -50,13 +50,19 @@
 				else res += pixel(j, i, '#fff')
 			}	
 		}
-
-		$("#display").html(res);
+		
+		$(element).html(res);
 	}
 
+	display([[0, 1], [1, 0]], '#display')
+
+	function unique(str) {
+		return Array.from(new Set(str))
+	}
+	
 	function get_vars_vals_by_ind(num, vars_names) {
-		// (4, 'abcd') => [{name: 'a', val: 0}, {name: 'b', val: 1}, {name: 'c', val: 0}, {name: 'd', val: 0}]
-		// bin(4) = 0b0100
+		/* (4, 'abcd') to [{name: 'a', val: 0}, {name: 'b', val: 1}, {name: 'c', val: 0}, {name: 'd', val: 0}]
+		because bin(4) = 0b0100 */
 
 		if (vars_names == '') return []
 
@@ -70,20 +76,12 @@
 		return vars
 	}
 
-	function unique(str) {
-		return Array.from(new Set(str))
-	}
-
-	display([[0, 1], [1, 0]])
-
-	$('#expression').on('keydown keyup change', function() {
-		var only_vars = $(this).val().replaceAll(/\W|[0-1]/g, '')
+	function build_binary_image(expression) {
+		var only_vars = expression.replaceAll(/\W|[0-1]/g, '')
 		var vars_names = unique(only_vars).sort()
 		
 		var w_names = vars_names.filter((_, i) => i % 2 == 0)
 		var h_names = vars_names.filter((_, i) => i % 2 == 1)
-
-		$('#w_names').html(w_names); $('#h_names').html(h_names)
 
 		var res = []
 		for (var i=0; i<2**h_names.length; i++) {
@@ -93,25 +91,34 @@
 			for (var j=0; j<2**w_names.length; j++) {
 				var vars = h_vars.concat(get_vars_vals_by_ind(j, w_names))
 
-				var pix = calculate_logical_expression($('#expression').val(), vars)
+				var pix = calculate_logical_expression(expression, vars)
 				l.push(pix)
 
-				if (pix == null) { res[0] = null; break }
+				if (pix == null) { return null }
 			}
 			res.push(l)
 		}
 
-		if (res[0] != null) {
-			display(res)
+		return {res: res, w_names: w_names, h_names: h_names}
+	}
+
+
+	$('#expression').on('keydown keyup change', function() {
+		var res = build_binary_image($(this).val())
+
+		if (res != null) {
+			display(res.res, '#display')
+
+			$('#w_names').html(res.w_names); $('#h_names').html(res.h_names)
 
 			// Normal borders
-			$("#expression").attr('style', '')
-			$("#display").attr('style', 'border: 1px solid')
+			$(this).attr('class', '')
+			$("#display").attr('class', '')
 		}
 		else {
 			// Red borders
-			$("#expression").attr('style', 'border: 1px solid #e91e63')
-			$("#display").attr('style', 'border: 1px solid #e91e63;')
+			$(this).attr('class', 'synt_err')
+			$('#display').attr('class', 'synt_err')
 		}
 	})
 
@@ -147,8 +154,11 @@
 		outline: 0;
 		border: 1px solid #3f51b5;
 	}
+	.synt_err {
+		border: 1px solid #e91e63 !important;
+	}
 
-	main {
+	.main {
 		position: absolute;
 		top: 50%;
 		left: 50%;
@@ -166,6 +176,15 @@
 		position: absolute;
 		margin: -30px 0;
 		font-family: monospace;
+	}
+	
+	#h_names {
+		margin: 12px -36px; 
+		transform: rotate(90deg);
+	}
+
+	#display {
+		border: 1px solid;
 	}
 </style>
 

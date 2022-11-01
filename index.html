@@ -28,6 +28,9 @@
 	<textarea id="expression" type="text" spellcheck="false" placeholder="insert your logical expression here">a^b</textarea>
 
 	<main>
+		<p id="w_names" class="vars_names">a</p>
+		<p id="h_names" class="vars_names" style="margin: 12px -36px; transform: rotate(90deg);">b</p>
+
 		<svg id="display" viewBox="0 0 21 21" width="100%" height="100%" style="border: 1px solid"> </svg>
 	</main>
 
@@ -67,13 +70,20 @@
 		return vars
 	}
 
+	function unique(str) {
+		return Array.from(new Set(str))
+	}
+
 	display([[0, 1], [1, 0]])
 
 	$('#expression').on('keydown keyup change', function() {
-		var vars_names = Array.from(new Set($(this).val().replaceAll(/\W|[0-1]/g, ''))).join('')
+		var only_vars = $(this).val().replaceAll(/\W|[0-1]/g, '')
+		var vars_names = unique(only_vars).sort()
 		
-		var w_names = vars_names.slice(0, Math.round(vars_names.length/2))
-		var h_names = vars_names.slice(w_names.length)
+		var w_names = vars_names.filter((_, i) => i % 2 == 0)
+		var h_names = vars_names.filter((_, i) => i % 2 == 1)
+
+		$('#w_names').html(w_names); $('#h_names').html(h_names)
 
 		var res = []
 		for (var i=0; i<2**h_names.length; i++) {
@@ -117,19 +127,20 @@
 
 	textarea {
 		position: absolute;
+		transform: translate(-50%, 0);
 		top: 25px;
 		left: 50%;
-		transform: translate(-50%, 0);
-		height: 20px;
-		width: 50vmin;
-		max-width: 50vmin;
-		min-width: 50vmin;
-		font-size: .95rem;
 		padding: 10px 12px;
-		text-align: left;
-		border: 1px solid;
+		
+		height: 20px;
+		width: 50vmin; max-width: 50vmin; min-width: 50vmin;
+		
 		background-color: #00000000;
+		border: 1px solid;
 		box-shadow: 5px 5px 15px 0px #0000001f;
+
+		text-align: left;
+		font-size: .95rem;
 		font-family: monospace;
 	}
 	textarea:focus-visible {
@@ -149,6 +160,12 @@
 		bottom: 10px;
 		left: 50%;
 		transform: translate(-50%, -50%);
+	}
+
+	.vars_names {
+		position: absolute;
+		margin: -30px 0;
+		font-family: monospace;
 	}
 </style>
 

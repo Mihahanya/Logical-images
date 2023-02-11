@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Build an image according to a logical rule</title>
+	<meta charset="utf-8">
+	
+	<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+	<script src="map_to_expr.js" type="text/javascript"></script>
+</head>
+
+<body>
+	<textarea id="expression" type="text" spellcheck="false" placeholder="insert your logical expression here"> </textarea>
+	
+	<div id="vnum">
+		<p>Vars number:</p>
+		<input id="num" type="number" spellcheck="false" placeholder="vars number">
+	</div>
+
+	<div class="main" style="width: 100px;">
+		<div class="pixel"></div>
+		<div class="pixel" style="background: blue;"></div>
+	</div>
+	
+
+	<footer> <a href="https:/github.com/Mihahanya"> 2022 Mihahanya </a> </footer>
+</body>
+
+<script>
+
+var truth_map = Array()
+
+var vars_n_input = 4
+
+var canv_width = 500
+$('.main').attr('style', 'width: ' + canv_width + 'px')
+
+$('#num').on('keydown keyup change', function() {
+	vars_n_input = $(this).val()
+	var w = (vars_n_input / 2).toFixed(0)
+	var h = vars_n_input - w
+
+	truth_map = Array(2**h).fill().map(() => Array(2**w).fill(0))
+
+	var size = canv_width / 2**w - 2
+	var cont = ''
+	for (var i=0; i<2**h; i++) {
+		for (var j=0; j<2**w; j++) {
+			cont += `<div id="pix${i}_${j}" x="${j}" y="${i}" class="pixel blue" style="width: ${size}px; height: ${size}px;"></div>`
+		}
+		cont += '<br>'
+	}
+
+	$('.main').html(cont)
+})
+
+$(document).on('mousedown', function(e) {
+	if (e.target.id.slice(0, 3) == 'pix') {
+		// if click in some pix
+
+		elem = $('#' + e.target.id)
+		var x = elem.attr('x')
+		var y = elem.attr('y')
+
+		if (elem.attr('class') == 'pixel blue') {
+			elem.attr('class', 'pixel red') 
+			truth_map[y][x] = 1
+		}
+		else if (elem.attr('class') == 'pixel red') {
+			elem.attr('class', 'pixel blue') 
+			truth_map[y][x] = 0
+		}
+
+		console.log(img_to_expr(truth_map))
+	}
+})
+
+</script>
+
+<style>
+
+	body {
+		background-color: whitesmoke;
+	}
+
+	#expression {
+		position: absolute;
+		transform: translate(-50%, 0);
+		top: 25px;
+		left: 50%;
+		padding: 10px 12px;
+		
+		height: 20px;
+		width: 50vmin; max-width: 50vmin; min-width: 50vmin;
+		
+		background-color: #00000000;
+		border: 1px solid;
+		box-shadow: 5px 5px 15px 0px #0000001f;
+
+		text-align: left;
+		font-size: .95rem;
+		font-family: monospace;
+	}
+	#expression:focus-visible {
+		outline: 0;
+		border: 1px solid #3f51b5;
+	}
+
+	#vnum {
+		position: absolute;
+		display: flex;
+		align-items: center;
+		top: 110px;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
+
+	#num {
+		margin-left: 10px;
+		padding: 5px;
+		width: 30px;
+	}
+
+	.main {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		display: flex;
+		border: 1px solid black;
+		flex-wrap: wrap;
+	}
+
+	footer {
+		position: absolute;
+		bottom: 10px;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
+
+	#display {
+		width: 25vmin;
+		border: 1px solid;
+	}
+
+	.pixel {
+		width: 20px; 
+		height: 20px; 
+		background: red;
+		border: 1px solid black;
+	}
+
+	.red {
+		background: red;
+	}
+	
+	.blue {
+		background: blue;
+	}
+
+</style>
+
+</html>

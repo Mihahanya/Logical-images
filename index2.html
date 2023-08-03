@@ -13,7 +13,8 @@
 	
 	<div id="vnum">
 		<p>Vars number:</p>
-		<input id="num" type="number" spellcheck="false" placeholder="vars number">
+		<input id="num" type="number" spellcheck="false" placeholder="vars number" value="4">
+		<p style="width: 50%; margin: 0;" id="sizes-vals"> Size: </p>
 	</div>
 
 	<div class="main" style="width: 100px;">
@@ -34,7 +35,7 @@ var vars_n_input = 4
 var canv_width = 500
 $('.main').attr('style', 'width: ' + canv_width + 'px')
 
-$('#num').on('keydown keyup change', function() {
+$('#num').on('change keydown keyup', function() {
 	vars_n_input = $(this).val()
 	var w = (vars_n_input / 2).toFixed(0)
 	var h = vars_n_input - w
@@ -47,11 +48,13 @@ $('#num').on('keydown keyup change', function() {
 		for (var j=0; j<2**w; j++) {
 			cont += `<div id="pix${i}_${j}" x="${j}" y="${i}" class="pixel blue" style="width: ${size}px; height: ${size}px;"></div>`
 		}
-		cont += '<br>'
+		//cont += '<br>'
 	}
 
 	$('.main').html(cont)
+	$('#sizes-vals').text(`Size: ${2**w}x${2**h}`)
 })
+$('#num').trigger("change");
 
 $(document).on('mousedown', function(e) {
 	if (e.target.id.slice(0, 3) == 'pix') {
@@ -69,7 +72,6 @@ $(document).on('mousedown', function(e) {
 			elem.attr('class', 'pixel blue') 
 			truth_map[y][x] = 0
 		}
-
 		console.log(img_to_expr(truth_map))
 	}
 })
@@ -108,7 +110,9 @@ $(document).on('mousedown', function(e) {
 	#vnum {
 		position: absolute;
 		display: flex;
+		flex-flow: row wrap;
 		align-items: center;
+		justify-content: center;
 		top: 110px;
 		left: 50%;
 		transform: translate(-50%, -50%);

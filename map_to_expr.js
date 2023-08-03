@@ -24,13 +24,24 @@ function img_to_expr(truth_map) {
 	var w_n = Math.log(w) / Math.LN2
 	var h_n = Math.log(h) / Math.LN2
 
-	for (var y=0; y < h; y++) {
-		for (var x=0; x < w; x++) {
-			if (truth_map[y][x] == 1) {
-				console.log(negation_map_by_pos(x, y, w_n, h_n))
-			}
-		}
+	var alph = 'abcdefghijklmnopqrstuvwxyz'
+	alph = alph.slice(0, w_n + h_n)
+	alph = alph.split("").reverse().join("");
+	
+	var row_vals = [].concat(...truth_map)
+
+	var ops = []
+	for (var i=0; i < row_vals.length/4; i++) {
+		var r = row_vals.slice(i*4, i*4 + 4).join('')
+		var r_n = parseInt(r, 2)
+		ops = ops.concat('R_' + r_n)
 	}
 
-	return ''
+	console.log(ops)
+
+	var res = ''
+
+	
+
+	return res
 }

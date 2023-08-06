@@ -72,6 +72,7 @@ $(document).on('mousedown', function(e) {
 			elem.attr('class', 'pixel blue') 
 			truth_map[y][x] = 0
 		}
+		$('#expression').val(img_to_expr(truth_map))
 		console.log(img_to_expr(truth_map))
 	}
 })
@@ -113,7 +114,7 @@ $(document).on('mousedown', function(e) {
 		flex-flow: row wrap;
 		align-items: center;
 		justify-content: center;
-		top: 110px;
+		bottom: 110px;
 		left: 50%;
 		transform: translate(-50%, -50%);
 	}

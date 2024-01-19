@@ -1,10 +1,10 @@
-# Logical-images
+# Logical expressions to binary images
 
-You can try it [here](https://mihahanya.github.io/Logical-images/) 
+The project implements the idea of encoding a binary image by means of a logical expression. Basically, the idea is to make a truth table for the expression and to split it into two dimensions (by dividing variables into two columns), and the corresponding values of the table will be the values of the image bits. 
 
-### Setting any binary image with a logical formula
+[expr-to-img demo](https://mihahanya.github.io/Logical-images/) 
 
-Divide all the variables of a logical expression into two axes and iterate through all possible combinations of variable values. Solve the logical expression for each cell of the "two-dimensional truth table" and paint the cells in the appropriate colors. That's it!
+[img-to-expr demo (not finished)](https://mihahanya.github.io/Logical-images/index2.html) 
 
 For `a^b+c`:
 ```
